@@ -1,0 +1,184 @@
+--If you want to put this inside one of your projects feel free to do so but make sure to credit me! :)
+
+-- Gui to Lua
+-- Version: 3.1
+
+-- Instances:
+
+local List = Instance.new("ScreenGui")
+local MainFrame = Instance.new("ScrollingFrame")
+local UIListLayout = Instance.new("UIListLayout")
+local Top = Instance.new("Frame")
+local Viewing = Instance.new("TextLabel")
+local Confirmation = Instance.new("Frame")
+local Text = Instance.new("TextLabel")
+local No = Instance.new("TextButton")
+local Yes = Instance.new("TextButton")
+local Copy = Instance.new("TextButton")
+
+--Properties:
+
+List.Name = "List"
+List.Parent = game:GetService("CoreGui")
+List.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+List.ResetOnSpawn = false
+
+MainFrame.Name = "MainFrame"
+MainFrame.Parent = List
+MainFrame.BackgroundColor3 = Color3.fromRGB(47, 47, 47)
+MainFrame.BorderSizePixel = 0
+MainFrame.Position = UDim2.new(0.850943387, 0, 0.237960339, 0)
+MainFrame.Size = UDim2.new(0.149056643, 0, 0.487252116, 0)
+
+UIListLayout.Parent = MainFrame
+UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+
+Top.Name = "Top"
+Top.Parent = List
+Top.BackgroundColor3 = Color3.fromRGB(42, 42, 42)
+Top.BorderSizePixel = 0
+Top.Position = UDim2.new(0.850943387, 0, 0.162889525, 0)
+Top.Size = UDim2.new(0.149056599, 0, 0.0750708207, 0)
+
+Viewing.Name = "Viewing"
+Viewing.Parent = Top
+Viewing.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Viewing.BackgroundTransparency = 1.000
+Viewing.Size = UDim2.new(1.00000012, 0, 1, 0)
+Viewing.Font = Enum.Font.Code
+Viewing.Text = "Now Viewing - None"
+Viewing.TextColor3 = Color3.fromRGB(232, 232, 232)
+Viewing.TextScaled = true
+Viewing.TextSize = 14.000
+Viewing.TextWrapped = true
+
+Confirmation.Name = "Confirmation"
+Confirmation.Parent = List
+Confirmation.BackgroundColor3 = Color3.fromRGB(53, 53, 53)
+Confirmation.BorderSizePixel = 0
+Confirmation.Position = UDim2.new(0.375471681, 0, 0.376770556, 0)
+Confirmation.Size = UDim2.new(0, 395, 0, 147)
+Confirmation.Visible = false
+
+Text.Name = "Text"
+Text.Parent = Confirmation
+Text.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+Text.BackgroundTransparency = 1.000
+Text.Position = UDim2.new(0.0253164563, 0, 0.0884353742, 0)
+Text.Size = UDim2.new(0, 376, 0, 63)
+Text.Font = Enum.Font.SourceSans
+Text.Text = "Are you sure you want to look at - NAME's animations?"
+Text.TextColor3 = Color3.fromRGB(253, 253, 253)
+Text.TextScaled = true
+Text.TextSize = 14.000
+Text.TextWrapped = true
+
+No.Name = "No"
+No.Parent = Confirmation
+No.BackgroundColor3 = Color3.fromRGB(188, 24, 24)
+No.BackgroundTransparency = 0.100
+No.BorderSizePixel = 0
+No.Position = UDim2.new(0.564556956, 0, 0.619047642, 0)
+No.Size = UDim2.new(0, 142, 0, 35)
+No.Font = Enum.Font.Gotham
+No.Text = "No"
+No.TextColor3 = Color3.fromRGB(0, 0, 0)
+No.TextSize = 14.000
+
+Yes.Name = "Yes"
+Yes.Parent = Confirmation
+Yes.BackgroundColor3 = Color3.fromRGB(32, 241, 0)
+Yes.BackgroundTransparency = 0.100
+Yes.BorderSizePixel = 0
+Yes.Position = UDim2.new(0.0607594699, 0, 0.619047642, 0)
+Yes.Size = UDim2.new(0, 142, 0, 35)
+Yes.Font = Enum.Font.Gotham
+Yes.Text = "Yes"
+Yes.TextColor3 = Color3.fromRGB(0, 0, 0)
+Yes.TextSize = 14.000
+
+Copy.Name = "Copy"
+Copy.Parent = List
+Copy.BackgroundColor3 = Color3.fromRGB(56, 56, 56)
+Copy.BackgroundTransparency = 0.400
+Copy.BorderSizePixel = 0
+Copy.Size = UDim2.new(0, 237, 0, 37)
+Copy.Visible = false
+Copy.Font = Enum.Font.SourceSans
+Copy.Text = "NAME"
+Copy.TextColor3 = Color3.fromRGB(255, 255, 255)
+Copy.TextScaled = true
+Copy.TextSize = 14.000
+Copy.TextWrapped = true
+
+-- Scripts:
+
+local function JLUSJLG_fake_script() -- List.Handler 
+	local script = Instance.new('LocalScript', List)
+
+	local Players = game:GetService("Players")
+	local Player = Players.LocalPlayer
+	local Mouse = Player:GetMouse()
+	local UIS = game:GetService("UserInputService")
+	local Confirmation = script.Parent.Confirmation
+	local MainFrame = script.Parent.MainFrame
+	local TopText = script.Parent.Top.Viewing
+	
+	Mouse.Button1Down:Connect(function()
+		if UIS:IsKeyDown(Enum.KeyCode.LeftControl) then
+			if Mouse.Target.Parent:FindFirstChildOfClass("Humanoid") then
+				Target = Mouse.Target.Parent
+				Confirmation.Text.Text = "Are you sure you want to view "..Target.Name.."'s animations?"
+				Confirmation.Visible = true
+			end
+		end
+	end)
+	
+	Confirmation.No.MouseButton1Click:Connect(function()
+		Confirmation.Visible = false
+	end)
+	
+	Confirmation.Yes.MouseButton1Click:Connect(function()
+		Confirmation.Visible = false
+		TopText.Text = "Now Viewing - "..Target.Name
+		for i,v in pairs(MainFrame:GetDescendants()) do
+			if v:IsA("TextButton") then
+				v:Destroy()
+			end
+		end
+		for i,v in pairs(Target:GetDescendants()) do
+			if v:IsA("Animation") then
+				local C1 = script.Parent.Copy:Clone()
+				C1.Parent = MainFrame
+				C1.Position = UDim2.new(0,0,0,0)
+				C1.BackgroundColor3 = Color3.new(225,0,0)
+				local C2 = v:Clone()
+				C2.Parent = C1
+				C1.Text = C2.Name
+				local B = Instance.new("BoolValue", C1)
+				B.Name = "Toggled"
+				B.Value = false
+				C1.Visible = true
+			end
+		end
+	for i,v in pairs(MainFrame:GetDescendants()) do
+		if v:IsA("TextButton") then
+			local Anim = Player.Character:FindFirstChildOfClass("Humanoid"):LoadAnimation(v:FindFirstChildOfClass("Animation"))
+			v.MouseButton1Click:Connect(function()
+				Anim.Stopped:Connect(function()
+					v.BackgroundColor3 = Color3.new(225,0,0)
+				end)
+				if v.Toggled.Value == false then
+					v.BackgroundColor3 = Color3.new(0,225,0)
+					v.Toggled.Value = true
+				Anim:Play()
+				else
+					v.Toggled.Value = false
+					Anim:Stop()
+				end
+			end)
+		end
+	end
+	end)
+end
+coroutine.wrap(JLUSJLG_fake_script)()
